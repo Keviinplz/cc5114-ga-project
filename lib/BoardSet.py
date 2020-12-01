@@ -59,7 +59,3 @@ class BoardSet:
             random_index= random.randint(0, self.b_s-1)
             random_position = random.randint(0, self.b_s-1)
             self.conf[random_index] = random_position
-    
-
-
-

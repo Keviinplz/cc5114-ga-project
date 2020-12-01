@@ -1,23 +1,23 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from GA import GA
+from lib.GA import GA
 
 if __name__ == '__main__':
     board_size =  8
     pop_size = 100
     selection_factor = 5
-    GAlg = GA(pop_size, board_size, selection_factor)
-    GAlg.createPopulation()
+    ga = GA(pop_size, board_size, selection_factor)
+    ga.createPopulation()
 
-    while not GAlg.isReady():
+    while not ga.isReady():
         next_generation = []
         for i in range(int(pop_size/2)):
-            parents = GAlg.selectParents()
-            children = GAlg.reproduce(parents)
+            parents = ga.selectParents()
+            children = ga.reproduce(parents)
             next_generation.append(children[0])
             next_generation.append(children[1])       
-        GAlg.setPopulation(next_generation)
+        ga.setPopulation(next_generation)
 
-c_winner = GAlg.getPopulation()[0].getConfig()
+c_winner = ga.getPopulation()[0].getConfig()
 print(c_winner)
