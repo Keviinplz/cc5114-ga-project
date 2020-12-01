@@ -2,7 +2,7 @@ import random
 import collections
 import numpy as np
 
-class BoardSet():
+class BoardSet:
     """
     Define the board set that contains the queen's position
 
@@ -18,9 +18,13 @@ class BoardSet():
     
     def getFitness(self)->int:
         """Returns the fitness function of a chessboard
+            using a collector diccionary take the frequency
+            of the numbers in the configuration array and after 
+            that, the function calculate if there is some a 
+            diagonal menace
 
         Returns:
-            int: [description]
+           fitness: an int that tells how many attacks are in the board
         """
         
         fitness = 0
@@ -29,7 +33,7 @@ class BoardSet():
             fitness += collection[key]-1
         
         for i in range(self.b_s):
-            for j in range(i, self.b_s):
+            for j in range(i+1, self.b_s):
                 diff_index=j-i
                 diff_pos=abs(self.conf[j]-self.conf[i])
                 if diff_index==diff_pos: fitness+=1
@@ -55,5 +59,7 @@ class BoardSet():
             random_index= random.randint(0, self.b_s-1)
             random_position = random.randint(0, self.b_s-1)
             self.conf[random_index] = random_position
+    
+
 
 

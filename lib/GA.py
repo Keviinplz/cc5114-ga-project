@@ -4,7 +4,7 @@ import numpy as np
 from BoardSet import BoardSet
 
 
-class GA():
+class GA:
     """
     Define a Genetic Algorithm class to find a word
 
@@ -16,11 +16,11 @@ class GA():
     b_s: int
         Length of an individual word
     population: list
-        List of all individual
+        List of all individual, each individual is an instance of BoardSet
     mut_chance: float
         mutation chance indicate how likely an individual is to be mutated
     """
-    population = None
+    population = []
     ready = False
 
     def __init__(self, p_s: int, b_s: int, s_f: float, mut = 0.8):
@@ -41,16 +41,13 @@ class GA():
         self.s_f = s_f
         self.mut = mut
         
-    
-   
-        
 
     def createPopulation(self) -> None:
         """
         Create a population of p_s boards with b_s size
 
         """
-        pop = np.random.randint(8, size = (self.p_s, self.b_s))
+        pop = np.random.randint(self.b_s, size = (self.p_s, self.b_s))
         for i in range(self.p_s):
             i_board = BoardSet(pop[i].tolist(), self.b_s)
             self.population.append(i_board)
@@ -62,46 +59,74 @@ class GA():
         """
         return self.population
 
-    def sortPopulation(self) -> list:
-        """Sort the population in ascending order of
+    def setPopulation(self, population: list):
+        """Set the population of the GA
 
-        Returns:
-            list: [description]
+        Args:
+            population (list): [description]
+        """
+        self.population = population
+        
+    def sortPopulation(self):
+        """Sort the population in ascending order of fitness function
+
+
         """
         fitness_arr = []
         for i in range(self.p_s):
             fitness_arr.append(self.population[i].getFitness())
         
         sort_index = np.argsort(fitness_arr)
-        self.population = self.population[sort_index]
+        np_population = np.array(self.population)
+        self.population = np_population[sort_index].tolist()
 
     def selectParents(self)->list:
-        """Order the population and select a parents such as
+        """Order the population and select two parents such as
             the better fitness function are priorizated 
 
         Returns:
-            list: [description]
+            parents: list of parents
         """
-        
         self.sortPopulation()
         rand = np.random.uniform(0, 1, 2) # two parents
-        random_index = self.p_s * rand**(self.s_f)
-        random_index.astype(int)
-        parents = self.population[random_index]
+        random_index = (self.p_s * rand**(self.s_f)).astype(int) # function to priorizate small values
+
+        np_population = np.array(self.population)
+        parents = np_population[random_index].tolist()
         return parents
         
     def reproduce(self, parents:list)->list:
-        cross_point = random.randint(1, self.b_s-1)
+        """ Taking two given parents generate two children
+            using the cross over process and the mutation of
+            genes
+
+        Args:
+            parents: list of parents, every parent is an instance of BoardSet
+
+        Returns:
+            children: list of children 
+        """
+        cross_point = random.randint(1, self.b_s-1) #cross over point
         firstParent = parents[0]
         secondParent = parents[1]
-        firstChild = BoardSet(firstParent.getConfig()[:cross_point].append(secondParent.getConfig()[cross_point:]), self.b_s)
-        secondChild = BoardSet(secondParent.getConfig()[:cross_point].append(firstParent.getConfig()[cross_point:]), self.b_s)
+
+        firstChild = BoardSet(firstParent.getConfig()[:cross_point] + secondParent.getConfig()[cross_point:], self.b_s)
+        secondChild = BoardSet(secondParent.getConfig()[:cross_point] + firstParent.getConfig()[cross_point:], self.b_s)
+        
         firstChild.mutate(self.mut)
         secondChild.mutate(self.mut)
         children = [firstChild, secondChild]
         return children
 
     def isReady(self):
+        """Tells if the solution was reached
+
+        Returns:
+            boolean: true if the solution was reached 
+        """
+        self.sortPopulation()
+        if self.population[0].getFitness() ==0:
+            self.ready = True
         return self.ready
     
 
