@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-from BoardSet import BoardSet
+from .BoardSet import BoardSet
 
 
 class GA:

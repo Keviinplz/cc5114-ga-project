@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from GA import GA
+from lib.GA import GA
 
 if __name__ == '__main__':
     board_size =  8
@@ -13,8 +13,8 @@ if __name__ == '__main__':
     while not GAlg.isReady():
         next_generation = []
         for i in range(int(pop_size/2)):
-            parents = GAlg.selectParents()
-            children = GAlg.reproduce(parents)
+            parents = ga.selectParents()
+            children = ga.reproduce(parents)
             next_generation.append(children[0])
             next_generation.append(children[1])       
         GAlg.setPopulation(next_generation)
