@@ -7,7 +7,7 @@ if __name__ == '__main__':
     board_size =  8
     pop_size = 60
     selection_factor = 5
-    GAlg = GA(pop_size, board_size, selection_factor, 0.1)
+    GAlg = GA(pop_size, board_size, selection_factor)
     GAlg.createPopulation()
     best_fitness = []
     while not GAlg.isReady():

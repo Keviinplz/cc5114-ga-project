@@ -18,7 +18,7 @@ class GA:
     population: list
         List of all individual, each individual is an instance of BoardSet
     mut_chance: float
-        mutation chance indicate how likely an individual is to be mutated
+        mutation chance indicate how likely an individual is to be mutated, 0.8 bu default
     """
     population = []
     ready = False
