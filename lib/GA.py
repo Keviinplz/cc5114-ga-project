@@ -34,7 +34,9 @@ class GA:
             The size of the chessboard
 
         s_f: float
-            Selection factor 
+            Selection factor
+        mut: float 
+            Mutation chance 
         """
         self.p_s = p_s
         self.b_s = b_s
