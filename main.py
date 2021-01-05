@@ -6,41 +6,43 @@ import matplotlib.pyplot as plt
 from lib.GA import GA
 
 def handleInputs():
-
+    
     if sys.argv[1] != "n-queen" and sys.argv[1] != "random_word" and sys.argv[1] !="to_binary" :
         raise ValueError("""
         You did not give a valid option. Remember you have to choose between: 
                 "n-queen", "random_word" or "to_binary".
         """)
-
+    
 if __name__ == '__main__':
     handleInputs()
+    option = sys.argv[1]
 
-    ## General parameters for genetic algorithm 
+    ## GENERAL PARAMETERS FOR GENETIC ALGORITHM
     pop_size = 60
     selection_factor = 5
     mutation = 0.2
-    option = sys.argv[1]
+
+    ##### N-QUEEN PARAMETERS
+    board_size =  8
+
+    ##### RANDOM WORD PARAMETERS
+    target_word = "kakaroto" 
+    
+    ### TO BINARY PARAMETERS
+    number_to_convert = 724
+    number_of_genes =  10
     GEN = []
     for k in range(10):
-            ##### N-QUEEN PARAMETERS
         if(option == "n-queen"):
-            board_size =  8
             ga = GA(pop_size, "n-queen", selection_factor, mutation)
             ga.createPopulation(b_s = board_size)
-            
-
-        ##### RANDOM WORD PARAMETERS 
-        if(option == "random_word"):
-            target_word = "kakaroto"
+        
+        if(option == "random_word"):    
             ga = GA(pop_size, "random_word", selection_factor, mutation)
             ga.createPopulation(target_word=target_word)
 
-
-        ### TO BINARY PARAMETERS
         if(option == "to_binary"):
-            number_to_convert = 724
-            number_of_genes =  10
+
             ga = GA(pop_size, "to_binary", selection_factor, mutation)
             ga.createPopulation(target_number=number_to_convert, genes_number=number_of_genes)
         best_fitness = []
