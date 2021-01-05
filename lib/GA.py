@@ -1,6 +1,9 @@
 import random
 import numpy as np
+import string
 
+from .Binary import Binary
+from .Word import Word
 from .BoardSet import BoardSet
 
 
@@ -13,47 +16,64 @@ class GA:
 
     p_s: int
         Size of the Population
-    b_s: int
-        Length of an individual word
+    problem: string
+        Problem to solve
     population: list
-        List of all individual, each individual is an instance of BoardSet
+        List of all individual
     mut_chance: float
         mutation chance indicate how likely an individual is to be mutated, 0.8 bu default
     """
     population = []
     ready = False
 
-    def __init__(self, p_s: int, b_s: int, s_f: float, mut = 0.8):
+    def __init__(self, p_s: int, problem: str, s_f: float, mut = 0.8):
         """
         Parameters
         -----------
         p_s: int
             The size of the Population, in this case, the GA Class will have
             a constant population size
-        b_s: int
-            The size of the chessboard
-
+        problem: int
+            The problem to solve
         s_f: float
             Selection factor
         mut: float 
             Mutation chance 
         """
         self.p_s = p_s
-        self.b_s = b_s
+        self.problem = problem
         self.s_f = s_f
         self.mut = mut
         
-
-    def createPopulation(self) -> None:
+    
+    def createPopulation(self, b_s: int=0, target_word: str = "", target_number: int =0, genes_number: int = 0) -> None:
         """
         Create a population of p_s boards with b_s size
 
         """
-        pop = np.random.randint(self.b_s, size = (self.p_s, self.b_s))
-        for i in range(self.p_s):
-            i_board = BoardSet(pop[i].tolist(), self.b_s)
-            self.population.append(i_board)
-
+        if (self.problem == "n-queen"):
+            pop = np.random.randint(b_s, size = (self.p_s, b_s))
+            for i in range(self.p_s):
+                i_board = BoardSet(pop[i].tolist(), b_s)
+                self.population.append(i_board)
+        
+        if (self.problem == "random_word"):
+            pop = []
+            for i in range(self.p_s):
+                i_word = ""
+                for j in range(len(target_word)):
+                    i_word += random.choice(string.ascii_lowercase)
+                i_word = Word(i_word, target_word, len(target_word))
+                self.population.append(i_word)
+        
+        if (self.problem == "to_binary"):
+            pop = []
+            for i in range(self.p_s):
+                i_binary = ""
+                for j in range(genes_number):
+                    i_binary += str(random.randint(0, 1)) 
+                i_binary = Binary(i_binary, target_number, genes_number)
+                self.population.append(i_binary)
     
     def getPopulation(self) -> list:
         """
@@ -108,13 +128,11 @@ class GA:
         Returns:
             children: list of children 
         """
-        cross_point = random.randint(1, self.b_s-1) #cross over point
         firstParent = parents[0]
         secondParent = parents[1]
-
-        firstChild = BoardSet(firstParent.getConfig()[:cross_point] + secondParent.getConfig()[cross_point:], self.b_s)
-        secondChild = BoardSet(secondParent.getConfig()[:cross_point] + firstParent.getConfig()[cross_point:], self.b_s)
-        
+        children = firstParent.intercourse(secondParent)
+        firstChild = children[0]
+        secondChild = children[1]        
         firstChild.mutate(self.mut)
         secondChild.mutate(self.mut)
         children = [firstChild, secondChild]

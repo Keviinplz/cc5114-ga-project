@@ -39,7 +39,7 @@ class BoardSet:
                 if diff_index==diff_pos: fitness+=1
         return fitness             
         
-    def getConfig(self)->list:
+    def getValue(self)->list:
         """ Returns array of queens position
 
         Returns:
@@ -59,3 +59,22 @@ class BoardSet:
             random_index= random.randint(0, self.b_s-1)
             random_position = random.randint(0, self.b_s-1)
             self.conf[random_index] = random_position
+     
+    def intercourse(self, anotherBoard):
+        """
+        Create two new boards based on the actual board and another one.
+            Using the crossover methodology.
+
+        Args:
+            anotherBoard (BoardSet): other board set
+            
+
+        Returns:
+            list: a list that contains the two children after doing cross over
+        """
+        cross_point = random.randint(1, self.b_s-1) #cross over point
+        firstChild = BoardSet(self.getValue()[:cross_point] + anotherBoard.getValue()[cross_point:], self.b_s)
+        secondChild = BoardSet(anotherBoard.getValue()[:cross_point] + self.getValue()[cross_point:], self.b_s)
+
+        return [firstChild, secondChild]
+         
